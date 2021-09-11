@@ -6,14 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import com.weather.base.BaseActivity
-import com.weather.databinding.ActivitySplashBinding
-import com.weather.ui.splash.SplashVM
+import com.weather.common.ResourceStatus
+import com.weather.databinding.ActivityHomeBinding
+import com.weather.ui.detail.DetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity<ActivitySplashBinding>() {
+class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
-    private val viewModel: SplashVM by viewModels()
+    private val viewModel: HomeVM by viewModels()
 
     companion object {
         fun start(context: Context) {
@@ -23,11 +24,56 @@ class HomeActivity : BaseActivity<ActivitySplashBinding>() {
         }
     }
 
-    override fun getActivityBinding(inflater: LayoutInflater) = ActivitySplashBinding
+    override fun getActivityBinding(inflater: LayoutInflater) = ActivityHomeBinding
         .inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initButton()
+        observeData()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.dispose()
+    }
+
+    private fun initButton() {
+        bind.btnCurrentLocation.setOnClickListener {
+
+        }
+
+        bind.btnWarszawa.setOnClickListener {
+            goToDetail(cityName = "Warszawa")
+        }
+
+        bind.btnWroclaw.setOnClickListener {
+            goToDetail(cityName = "Wroclaw")
+        }
+
+        bind.btnLodz.setOnClickListener {
+            goToDetail(cityName = "Lodz")
+        }
+    }
+
+    private fun goToDetail(cityName: String) {
+        DetailActivity.start(context = this, cityName = cityName)
+    }
+
+    private fun observeData() {
+        observe(viewModel.currentResult) { result ->
+            when (result?.status) {
+                ResourceStatus.LOADING -> {
+
+                }
+                ResourceStatus.SUCCESS -> {
+
+                }
+                ResourceStatus.ERROR -> {
+
+                }
+            }
+        }
     }
 }

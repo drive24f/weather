@@ -58,7 +58,7 @@ class ApiModule {
     fun provideRetrofit(@Named(value = "okhttp") okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://www.weather.com/")
+            .baseUrl("https://api.openweathermap.org/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
